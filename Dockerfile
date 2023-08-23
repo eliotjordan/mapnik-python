@@ -1,5 +1,5 @@
 # Python can't be > 3.9 until mapnik-python is updated
-FROM public.ecr.aws/lambda/python:3.9
+FROM public.ecr.aws/lambda/python:3.9 as build
 
 RUN yum groupinstall -y "Development Tools"
 RUN yum install -y \
@@ -21,11 +21,13 @@ RUN yum install -y \
 
 # Build sqlite
 RUN curl https://www.sqlite.org/2023/sqlite-autoconf-3420000.tar.gz | tar xzf - && \
-   cd sqlite-autoconf-3420000/ && \
-   ./configure && \
-   make  && \
-   make install && \
-   cp sqlite3.h /usr/include/.
+    cd sqlite-autoconf-3420000/ && \
+    ./configure && \
+    make  && \
+    make install && \
+    cp sqlite3.h /usr/include/. && \
+    cp /usr/local/lib/libsqlite3.so.0 /var/lang/lib/libsqlite3.so.0
+
 
 # Build proj
 RUN curl https://download.osgeo.org/proj/proj-9.2.1.tar.gz | tar xzf - && \
@@ -71,7 +73,8 @@ RUN git clone https://github.com/mapnik/python-mapnik.git && \
     git checkout v3.0.x && \
     BOOST_PYTHON_LIB=boost_python39 python setup.py install
 
-RUN cp /usr/local/lib/libsqlite3.so.0 /var/lang/lib/libsqlite3.so.0
-
 # Cleanup
 RUN rm -r boost_1_73_0  boost_1_73_0.tar.bz2  gdal proj-9.2.1  sqlite-autoconf-3420000
+
+FROM public.ecr.aws/lambda/python:3.9
+COPY --from=build / /
