@@ -1,1 +1,1 @@
-# mapnik-python
+# mapnik-python-base Docker image
