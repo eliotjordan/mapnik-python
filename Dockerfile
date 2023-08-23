@@ -76,5 +76,5 @@ RUN git clone https://github.com/mapnik/python-mapnik.git && \
 # Cleanup
 RUN rm -r boost_1_73_0  boost_1_73_0.tar.bz2  gdal proj-9.2.1  sqlite-autoconf-3420000
 
-FROM public.ecr.aws/lambda/python:3.9
+FROM public.ecr.aws/lambda/python:3.9 as production
 COPY --from=build / /

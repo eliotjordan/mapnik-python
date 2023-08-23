@@ -36,7 +36,7 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          target: mapnik-python-base
+          target: production
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/mapnik-python-aws:${{ env.TAG }}
