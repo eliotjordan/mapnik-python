@@ -16,7 +16,8 @@ RUN yum install -y \
     libpng-devel \
     cairo-devel \
     postgresql-devel \
-    boost-regex
+    boost-regex \
+    which
 
 # Build sqlite
 RUN curl https://www.sqlite.org/2023/sqlite-autoconf-3420000.tar.gz | tar xzf - && \
@@ -52,7 +53,7 @@ RUN wget https://boostorg.jfrog.io/artifactory/main/release/1.73.0/source/boost_
     tar --bzip2 -xf boost_1_73_0.tar.bz2 && \
     cd boost_1_73_0 && \
     ./bootstrap.sh --prefix=/usr/local/ && \
-    ./b2 install || true && \ # There are 10 boost libraries that don't compile. Forces exit code 0.
+    ./b2 install || true && \
     ./b2 headers
 
 # Build mapnik
