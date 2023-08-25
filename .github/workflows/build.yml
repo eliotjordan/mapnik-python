@@ -31,13 +31,24 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.TOKEN }}
-      - name: Build and push
-        uses: docker/build-push-action@v3
+      - name: Build, Squash, and Push to Github Packages
+        run: |
+          docker build --squash --platform=linux/amd64 -t ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/pmtiles_base:latest .
+          docker push ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/pmtiles_base:latest
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
         with:
-          context: .
-          platforms: linux/amd64
-          target: build
-          push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/lambda:${{ env.TAG }}
-            ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/lambda:latest
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Tag and Push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker tag ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/pmtiles_base:latest ${{ env.ECR_REGISTRY }}/pmtiles_base:latest
+          docker push ${{ env.ECR_REGISTRY }}/pmtiles_base:latest
