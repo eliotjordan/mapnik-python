@@ -40,4 +40,4 @@ jobs:
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/mapnik-python-aws:${{ env.TAG }}
-            ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/mapnik-python-aws:${{ github.ref_name }}
+            ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/mapnik-python-aws:latest
