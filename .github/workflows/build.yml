@@ -39,5 +39,5 @@ jobs:
           target: build
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/mapnik-python-aws:${{ env.TAG }}
-            ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/mapnik-python-aws:latest
+            ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/lambda:${{ env.TAG }}
+            ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/lambda:latest
