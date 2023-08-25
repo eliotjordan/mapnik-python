@@ -75,3 +75,16 @@ RUN git clone https://github.com/mapnik/python-mapnik.git && \
 
 # Cleanup
 RUN rm -r boost_1_73_0  boost_1_73_0.tar.bz2  gdal proj-9.2.1  sqlite-autoconf-3420000
+RUN yum groupremove -y "Development Tools"
+RUN yum remove -y \
+    wget \
+    libtiff-devel \
+    libxml2-devel \
+    curl-devel \
+    harfbuzz-devel \
+    libjpeg-devel \
+    libwebp-devel \
+    libpng-devel \
+    cairo-devel \
+    postgresql-devel \
+    boost-regex \
