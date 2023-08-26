@@ -13,8 +13,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Set env
-        run: echo "TAG=${GITHUB_SHA::8}" >> $GITHUB_ENV
       - name: Downcase repo
         run: echo "REPO_LOWER=${REPO,,}" >> $GITHUB_ENV
         env:
@@ -33,7 +31,7 @@ jobs:
           password: ${{ secrets.TOKEN }}
       - name: Build, Squash, and Push to Github Packages
         run: |
-          docker build --squash --platform=linux/amd64 -t ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/pmtiles_base:latest .
+          docker build --squash --platform=linux/amd64 --cache-from=type=gha --cache-to=type=gha,mode=max -t ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/pmtiles_base:latest .
           docker push ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/pmtiles_base:latest
 
       - name: Configure AWS credentials
@@ -50,5 +48,5 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          docker tag ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/pmtiles_base:latest ${{ env.ECR_REGISTRY }}/pmtiles_base:latest
-          docker push ${{ env.ECR_REGISTRY }}/pmtiles_base:latest
+          docker tag ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/pmtiles_base:latest public.ecr.aws/a9s2e4u8/pmtiles_base:latest
+          docker push public.ecr.aws/a9s2e4u8/pmtiles_base:latest
