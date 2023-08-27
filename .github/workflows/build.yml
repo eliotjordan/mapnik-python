@@ -48,5 +48,6 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/a9s2e4u8
           docker tag ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}/pmtiles_base:latest public.ecr.aws/a9s2e4u8/pmtiles_base:latest
           docker push public.ecr.aws/a9s2e4u8/pmtiles_base:latest
